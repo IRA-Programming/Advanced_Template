@@ -6,7 +6,15 @@
 namespace adt {
     class Controller : public vex::controller {
         public:
+            /** 
+             * @brief Creates a new Controller object.
+            */
             Controller() : vex::controller() {}
+
+            /** 
+             * @brief Creates a new Controller object.
+             * @param type The type of controller that is being created. This can be set to primary or partner.
+            */
             Controller(vex::controllerType type) : vex::controller(type) {}
             
             class Button {
@@ -29,7 +37,7 @@ namespace adt {
                     };
 
                     Button(vex::controller::button button, int mappedButton) : _button(button), mappedButton(mappedButton) {}
-
+                    
                     void onPressed(std::function<void()> callback) {
                         switch (mappedButton) {
                             case static_cast<int>(Controller::Button::ControllerButton::DIGITAL_L1):
@@ -241,6 +249,14 @@ namespace adt {
             Button CONTROLLER_DIGIAL_Y = Button(ButtonY, static_cast<int>(Controller::Button::ControllerButton::DIGITAL_Y));
             Button CONTROLLER_DIGIAL_A = Button(ButtonA, static_cast<int>(Controller::Button::ControllerButton::DIGITAL_A));
 
+            /**
+             * @brief Print on the controller at a certain location
+             * 
+             * @param row The row to print on
+             * @param col The column to print on
+             * @param format The text to print
+             * @param ... Additional arguments for formatting
+             */
             void printAt(int row, int col, const char* format, ...) {
                 va_list args;
                 va_start(args, format);
