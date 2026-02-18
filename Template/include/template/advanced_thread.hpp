@@ -12,21 +12,9 @@ namespace adt {
         /**
          * @brief Creates a thread object.
          * @param callback A reference to a function.
-         */
-        Thread( int  (* callback)(void) ) : _thread(new thread(callback)) {};
-
-        /**
-         * @brief Creates a thread object.
-         * @param callback A reference to a function.
          * @param arg A void pointer that is passed to the callback.
          */
         Thread( int  (* callback)(void *), void *arg ) : _thread(new thread(callback, arg)) {};
-
-        /**
-         * @brief Creates a thread object.
-         * @param callback A reference to a function. 
-         */
-        Thread( void (* callback)(void) ) : _thread(new thread((int (*)(void)) callback)) {}
 
         /**
          * @brief Creates a thread object.
