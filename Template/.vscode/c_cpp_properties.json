@@ -30,7 +30,6 @@
 				"${vex_sdkIncludes}",
 				"${workspaceFolder}",
 				"${workspaceFolder}/include",
-				"${workspaceFolder}/template/include",
 				"${workspaceFolder}/include/template"
 			],
 			"compilerPath": "${vex_compilerPath}",

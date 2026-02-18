@@ -12,6 +12,7 @@
 
 #include "v5.h"
 #include "v5lvgl.h"
+#include <stdbool.h>
 
 // necessary private V5 API functions
 void  vexTaskAdd( int (* callback)(void), int interval, char const *label );
