@@ -97,8 +97,9 @@ void usercontrol(void) {
 //
 
 int main() {
-
+  //DO NOT REMOVE - ESPECIALY IF YOU ARE USING LVGL
   v5_lv_init();
+  
   // Set up callbacks for autonomous and driver control periods.
   Competition.autonomous(autonomous);
   Competition.drivercontrol(usercontrol);
