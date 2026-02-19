@@ -14,7 +14,7 @@
 
 #define waitUntil(condition)                                                   \
   do {                                                                         \
-    wait(5, vex::timeUnits::msec);                                                             \
+    wait(5, vex::timeUnits::msec);                                                            \
   } while (!(condition))
 
 #define repeat(iterations)                                                     \

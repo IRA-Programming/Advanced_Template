@@ -2,6 +2,7 @@
 #include "template_api.hpp"
 #include <functional>
 #include <unordered_map>
+#include <vector>
 
 namespace adt {
     class Controller : public vex::controller {
@@ -36,8 +37,13 @@ namespace adt {
                             static const int DIGITAL_UNDEFINDED = 12;
                     };
 
+                    Button() = default;
                     Button(vex::controller::button button, int mappedButton) : _button(button), mappedButton(mappedButton) {}
                     
+                    /** 
+                     * @brief Sets the function to be called when the button is pressed.
+                     * @param callback A reference to a function.
+                    */
                     void onPressed(std::function<void()> callback) {
                         switch (mappedButton) {
                             case static_cast<int>(Controller::Button::ControllerButton::DIGITAL_L1):
@@ -84,6 +90,11 @@ namespace adt {
                         }
                     }
 
+                    /**
+                     * @brief  Sets the function to be called when the button is released
+                     * 
+                     * @param callback A reference to a function.
+                     */
                     void onReleased(std::function<void()> callback) {
                         switch (mappedButton) {
                             case Controller::Button::ControllerButton::DIGITAL_L1:
@@ -131,10 +142,21 @@ namespace adt {
                         }
                     }
 
+                    /**
+                     * @brief Returns the pressed state of the button
+                     * 
+                     * @return true Button is pressed
+                     * @return false Button is not pressed
+                     */
                     bool isPressed() {
                         return _button.pressing(); 
                     }
 
+                    /**
+                     * @brief This function allows to create a button that you can press without holding, while only excecuting the code once.
+                     * 
+                     * @param callback A reference to a function that will be called every time the button is pressed.
+                     */
                     void toggle(std::function<void()> callback) {
                         if(isPressed() && !_toggleButtonPressed) {
                             _toggleButtonPressed = true;
@@ -147,6 +169,12 @@ namespace adt {
                         }
                     }
                     
+                    /**
+                     * @brief This function allows you to run one code when a button is being held down and another code when the button is released.
+                     * 
+                     * @param whenPressed A reference to a function that will be called when the button is pressed.
+                     * @param whenReleased A reference to a function that will be called when the button is released.
+                     */
                     void hold(std::function<void()> whenPressed, std::function<void()> whenReleased) {
                         if(isPressed() && !_holdButtonPressed) {
                             _holdButtonPressed = true;
@@ -159,10 +187,23 @@ namespace adt {
                         }
                     }
 
+                    /**
+                     * @brief This function allows you to iterate through a list of functions every time a button is pressed, while only excecuting one function per press.
+                     * 
+                     * @param callbacks The functions to iterate through in order.
+                     */
+                    void iterate(std::vector<std::function<void()>> callbacks) {
+                        toggle([&](){
+                            index++;
+                            if(index >= callbacks.size()) index = 0;
+                            callbacks[index]();
+                        });
+                    }
                 private:
                     vex::controller::button _button;
                     int mappedButton;
                     static std::unordered_map<int, std::function<void()>> callbacks;
+                    int index = 0;
 
                     static void trampolineForButtonL1() {
                         int id = static_cast<int>(Controller::Button::ControllerButton::DIGITAL_L1);

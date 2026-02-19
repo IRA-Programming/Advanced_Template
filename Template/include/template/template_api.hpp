@@ -6,3 +6,4 @@
 #include "advanced_controller.hpp"
 #include "advanced_thread.hpp"
 #include "toolkit.hpp"
+#include "auton_selector.hpp"

@@ -14,8 +14,6 @@ using namespace vex;
 // A global instance of competition
 competition Competition;
 
-adt::Controller Controller1 = adt::Controller(primary);
-
 // define your global instances of motors and other devices here
 
 /*---------------------------------------------------------------------------*/
@@ -32,6 +30,21 @@ void pre_auton(void) {
 
   // All activities that occur before the competition starts
   // Example: clearing encoders, setting servo positions, ...
+}
+
+/*---------------------------------------------------------------------------*/
+/*                              Disabled Functions                           */
+/*                                                                           */
+/*  This is not apart of the regular V5 Competition template. Here, you can  */
+/*  add code to run when your robot is in the disabled state. This can be    */
+/*  useful for doing things such as setting variables to certain values.     */
+/*  Do not have your bot physically move during this time.                   */
+/*---------------------------------------------------------------------------*/
+
+void disabled(void) {
+  // ..........................................................................
+  // Insert code to be run when the robot is disabled here.
+  // ..........................................................................
 }
 
 /*---------------------------------------------------------------------------*/
@@ -61,7 +74,6 @@ void autonomous(void) {
 /*---------------------------------------------------------------------------*/
 
 void usercontrol(void) {
-  
 
   // User control code here, inside the loop
   while (1) {
@@ -92,6 +104,8 @@ int main() {
 
   // Prevent main from exiting with an infinite loop.
   while (true) {
+    //Implementation of the disabled task
+    if(Competition.DISABLED) disabled();
     wait(100, msec);
   }
 }
