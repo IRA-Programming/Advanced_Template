@@ -8,8 +8,7 @@
 /*----------------------------------------------------------------------------*/
 
 #include "vex.h"
-#include "v5lvgl.h"
-
+#include "v5lvgl.h" //Thanks to jpearman for the help with this!
 using namespace vex;
 
 // A global instance of competition
@@ -99,7 +98,7 @@ void usercontrol(void) {
 int main() {
   //DO NOT REMOVE - ESPECIALY IF YOU ARE USING LVGL
   v5_lv_init();
-  
+
   // Set up callbacks for autonomous and driver control periods.
   Competition.autonomous(autonomous);
   Competition.drivercontrol(usercontrol);
