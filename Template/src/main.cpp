@@ -8,6 +8,7 @@
 /*----------------------------------------------------------------------------*/
 
 #include "vex.h"
+#include "v5lvgl.h"
 
 using namespace vex;
 
@@ -94,7 +95,10 @@ void usercontrol(void) {
 //
 // Main will set up the competition functions and callbacks.
 //
+
 int main() {
+
+  v5_lv_init();
   // Set up callbacks for autonomous and driver control periods.
   Competition.autonomous(autonomous);
   Competition.drivercontrol(usercontrol);
