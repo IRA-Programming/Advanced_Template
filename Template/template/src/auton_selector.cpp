@@ -51,25 +51,25 @@ namespace adt {
                 rightPressed = false;
             }
 
-            if(selectButton.isPressed() && !selectPressed){
+            if(selectButton.pressing() && !selectPressed){
                 selectPressed = true;
                 autonSelected = true;
                 noAuton = false;
                 break;
             }
 
-            if(!selectButton.isPressed() && selectPressed){
+            if(!selectButton.pressing() && selectPressed){
                 selectPressed = false;
             }
 
-            if(noAutonButton.isPressed() && !noAutonPressed){
+            if(noAutonButton.pressing() && !noAutonPressed){
                 noAutonPressed = true;
                 autonSelected = true;
                 noAuton = true;
                 break;
             }
 
-            if(!noAutonButton.isPressed() && noAutonPressed){
+            if(!noAutonButton.pressing() && noAutonPressed){
                 noAutonPressed = false;
             }
             

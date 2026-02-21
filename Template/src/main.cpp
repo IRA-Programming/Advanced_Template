@@ -97,7 +97,7 @@ void usercontrol(void) {
 
 int main() {
   //DO NOT REMOVE - ESPECIALY IF YOU ARE USING LVGL
-  v5_lv_init();
+  v5_lv_init(); //Initialize lvgl, this is required to use the display and touch screen. Thanks to jpearman for the help with this!
 
   // Set up callbacks for autonomous and driver control periods.
   Competition.autonomous(autonomous);

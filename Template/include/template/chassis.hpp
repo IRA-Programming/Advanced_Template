@@ -3,20 +3,32 @@
 #include <string>
 #include <atomic>
 
+// Define pi if not defined
+#ifndef M_PI
+#define M_PI 3.14159265358979323846
+#endif
+
 namespace adt {
     class trackingWheel{
         public:
-            trackingWheel(vex::rotation &rotationSensor, double wheelDiameter) : _rotationSensor(rotationSensor), _wheelDiameter(wheelDiameter) {};
+            trackingWheel(vex::rotation* rotationSensor, double wheelDiameter) : _rotationSensor(rotationSensor), _wheelDiameter(wheelDiameter) {};
 
-            void resetPosition(){
-                _rotationSensor.resetPosition();
+            int32_t resetPosition(){
+                if(_rotationSensor == nullptr){
+                    return ADT_ERR;
+                }
+                _rotationSensor->resetPosition();
+                return ADT_SUCCESS;
             }
 
             double position(){
-                return _rotationSensor.position(vex::rotationUnits::deg) * (_wheelDiameter * 3.14159265358979323846) / 360.0;
+                if(_rotationSensor == nullptr){
+                    return ADT_ERR;
+                }
+                return (_rotationSensor->position(vex::rotationUnits::deg) / 360.0) * (M_PI * _wheelDiameter);
             }
         private:
-            vex::rotation &_rotationSensor;
+            vex::rotation* _rotationSensor;
             double _wheelDiameter;
 
             friend class Chassis;
@@ -69,7 +81,7 @@ namespace adt {
 
     class sensors {
         public:
-            sensors(trackingWheel &vertical, trackingWheel &horizontal, vex::inertial &inertialSensor) : _vertical(vertical), _horizontal(horizontal), _inertialSensor(inertialSensor) {};
+            sensors(trackingWheel* vertical, trackingWheel* horizontal, vex::inertial* inertialSensor) : _vertical(vertical), _horizontal(horizontal), _inertialSensor(inertialSensor) {};
 
             enum class odom{
                 vertical,
@@ -79,37 +91,67 @@ namespace adt {
             double getOdomPosition(odom wheel){
                 switch(wheel){
                     case odom::vertical:
-                        return _vertical.position();
+                        if(_vertical == nullptr){
+                            return ADT_ERR;
+                        }
+                        return _vertical->position();
                     case odom::horizontal:
-                        return _horizontal.position();
+                        if(_horizontal == nullptr){
+                            return ADT_ERR;
+                        }
+                        return _horizontal->position();
                     default:
-                        return 0.0;
+                        return ADT_ERR;
                 }
             }
 
             double getInertialHeading(){
-                return _inertialSensor.heading();
+                if(_inertialSensor == nullptr){
+                    return ADT_ERR;
+                }
+                return _inertialSensor->heading();
             }
 
-            void reset(){
-                _vertical.resetPosition();
-                _horizontal.resetPosition();
-                _inertialSensor.resetHeading();
-                _inertialSensor.resetRotation();
+            int32_t reset(){
+                if(_vertical == nullptr && _horizontal == nullptr && _inertialSensor == nullptr){
+                    return ADT_ERR;
+                }
+                if(_vertical != nullptr){
+                    _vertical->resetPosition();
+                }
+
+                if(_horizontal != nullptr){
+                    _horizontal->resetPosition();
+                }
+
+                if(_inertialSensor != nullptr){
+                    _inertialSensor->resetHeading();
+                    _inertialSensor->resetRotation();
+                }else{
+                    return ADT_ERR;
+                }
+                return ADT_SUCCESS;
             }
 
-            void calibrate(){
-                _vertical.resetPosition();
-                _horizontal.resetPosition();
-                _inertialSensor.calibrate(0);
-                waitUntil(!_inertialSensor.isCalibrating());
+            int32_t calibrate(){
+                if(_vertical != nullptr) _vertical->resetPosition();
+                if(_horizontal != nullptr) _horizontal->resetPosition();
+                if(_inertialSensor == nullptr){
+                    return ADT_ERR;
+                }
+                _inertialSensor->calibrate(0);
+                waitUntil(!_inertialSensor->isCalibrating());
+                return ADT_SUCCESS;
             }
 
-            Pose trackingLogic();
+            void trackingLogic();
         private:
-            trackingWheel &_vertical;
-            trackingWheel &_horizontal;
-            vex::inertial &_inertialSensor;
+            trackingWheel* _vertical = nullptr;
+            trackingWheel* _horizontal = nullptr;
+            vex::inertial* _inertialSensor = nullptr;
+
+            Pose previousPose;
+            Pose currentPose;
 
             friend class Chassis;
     };

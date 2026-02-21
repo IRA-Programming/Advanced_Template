@@ -83,7 +83,7 @@ namespace adt {
 
     class AutonSelector {
         public:
-            AutonSelector(Controller controller, std::vector<Autons> autons) : autons(autons) {}
+            AutonSelector(vex::controller controller, std::vector<Autons> autons) : autons(autons) {}
 
             struct FullReturnType{
                 Autons::AutonReturnType asAutonReturnType;
@@ -107,7 +107,7 @@ namespace adt {
                 NOAUTON
             };
 
-            void setButton(Controller::Button &button, setButtonType type) {
+            void setButton(vex::controller::button &button, setButtonType type) {
                 switch (type){
                     case setButtonType::SELECT:
                         selectButton = button;
@@ -132,9 +132,9 @@ namespace adt {
 
         private:
             std::vector<Autons> autons;
-            Controller::Button selectButton;
-            Controller::Button noAutonButton;
-            Controller controller;
+            vex::controller::button selectButton;
+            vex::controller::button noAutonButton;
+            vex::controller controller;
             Autons selectedAuton;
     };
 } // namespace adt

@@ -68,6 +68,23 @@ namespace adt {
                 }
             }
 
+            /**
+             * @brief Allows the user to run code once if a button is pressed
+             * 
+             * @param button The button to check if it is pressed
+             * @param callback The function to run when the button is pressed
+             * @note Could use mevent instead of current logic for simplification
+             */
+            static void toggleButtonScheme(vex::controller::button &button, std::function<void()> callback) {
+                static bool buttonPressed = false; //Use static to retain the value of buttonPressed between function calls
+                if(button.pressing() && !buttonPressed){
+                    callback();
+                }
+                if(!button.pressing() && buttonPressed){
+                    buttonPressed = false;
+                }
+            }
+
         private:
     };
 };
