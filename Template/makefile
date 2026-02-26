@@ -12,18 +12,21 @@ SRC_C += $(wildcard src/*.c)
 SRC_C += $(wildcard src/*/*.cpp) 
 SRC_C += $(wildcard src/*/*.c)
 SRC_C += $(wildcard lvgl/src/*/*.c) 
+SRC_C += $(wildcard template/src/*.cpp) 
+SRC_C += $(wildcard template/resources/*.c) 
 
 OBJ = $(addprefix $(BUILD)/, $(addsuffix .o, $(basename $(SRC_C))) )
 
 # location of include files that c and cpp files depend on
 SRC_H  = $(wildcard include/*.h)
+SRC_H  = $(wildcard include/template/*.h)
 SRC_H += ./lv_conf.h
 
 # additional dependancies
 SRC_A  = makefile
 
 # project header file locations
-INC_F  = include . lvgl lvgl/src
+INC_F  = include . lvgl lvgl/src include/template
 
 # headers needed to use library
 LV_SRC_H += $(wildcard lvgl/lvgl.h) 

@@ -72,8 +72,31 @@ void autonomous(void) {
 /*                                                                           */
 /*  You must modify the code to add your own robot specific commands here.   */
 /*---------------------------------------------------------------------------*/
+controller Controller;
+
+void BrainSelector(){
+    // 1. Create an image object on the active screen
+    lv_obj_t* img = lv_img_create(lv_scr_act(), NULL);
+
+    // 2. Set its source to the generated image
+    lv_img_set_src(img, &bluewave);
+
+    // 3. Align it on the screen
+    lv_obj_align(img, NULL, LV_ALIGN_CENTER, 0, 0);
+
+    // Optional: resize
+    // lv_obj_set_size(img, 480, 240);
+    lv_obj_t * titleText = nullptr;
+    titleText = lv_label_create(lv_scr_act(), NULL);
+    lv_label_set_text(titleText, "Auton A");
+    lv_obj_set_style_local_text_font(titleText, LV_LABEL_PART_MAIN, LV_STATE_DEFAULT, &lv_font_montserrat_14);
+    lv_obj_align(titleText, NULL, LV_ALIGN_IN_LEFT_MID, 10 , 0);
+}
+
 
 void usercontrol(void) {
+
+  BrainSelector();
 
   // User control code here, inside the loop
   while (1) {
@@ -95,10 +118,10 @@ void usercontrol(void) {
 // Main will set up the competition functions and callbacks.
 //
 
+void hi(){}
 int main() {
   //DO NOT REMOVE - ESPECIALY IF YOU ARE USING LVGL
   v5_lv_init(); //Initialize lvgl, this is required to use the display and touch screen. Thanks to jpearman for the help with this!
-
   // Set up callbacks for autonomous and driver control periods.
   Competition.autonomous(autonomous);
   Competition.drivercontrol(usercontrol);

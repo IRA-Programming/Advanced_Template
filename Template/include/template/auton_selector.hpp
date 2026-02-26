@@ -2,6 +2,7 @@
 #include "template_api.hpp"
 #include <vector>
 #include <algorithm>
+#include "v5lvgl.h"
 
 namespace adt {
     class AutonSelector;
@@ -83,7 +84,7 @@ namespace adt {
 
     class AutonSelector {
         public:
-            AutonSelector(vex::controller controller, std::vector<Autons> autons) : autons(autons) {}
+            AutonSelector(vex::controller controller, vex::brain brain, std::vector<Autons> autons) : autons(autons), controller(controller), brain(brain) {}
 
             struct FullReturnType{
                 Autons::AutonReturnType asAutonReturnType;
@@ -135,6 +136,9 @@ namespace adt {
             vex::controller::button selectButton;
             vex::controller::button noAutonButton;
             vex::controller controller;
+            vex::brain brain;
             Autons selectedAuton;
     };
 } // namespace adt
+
+extern const lv_img_dsc_t bluewave;

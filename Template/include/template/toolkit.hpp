@@ -1,5 +1,7 @@
+#pragma once
 #include "vex.h"
 #include "template_api.hpp"
+#include <functional>
 
 /**
  * @file toolkit.hpp
@@ -66,6 +68,19 @@ namespace adt {
                 } catch (const std::exception& e) {
                     onError(e);
                 }
+            }
+
+            static void toggleButtonScheme(vex::controller::button &button, std::function<void()> callback1, std::function<void()> callback2){
+                toggleButtonScheme(button, [&](){
+                    static bool status = false;
+                    status = !status;
+                    if(status){
+                        callback1();
+                    }else{
+                        callback2();
+                    }
+                });
+                
             }
 
             /**

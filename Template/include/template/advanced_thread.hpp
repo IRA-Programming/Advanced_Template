@@ -1,6 +1,15 @@
+#pragma once
 #include <vex.h>
 #include <functional>
 #include <atomic>
+
+#if !defined(__cplusplus)
+#error This file is being compiled as C, not C++
+#endif
+
+#ifndef __cplusplus
+extern "C" {
+#endif
 
 namespace adt {
     class ThreadGuard;
@@ -14,14 +23,14 @@ namespace adt {
          * @param callback A reference to a function.
          * @param arg A void pointer that is passed to the callback.
          */
-        Thread( int  (* callback)(void *), void *arg ) : _thread(new thread(callback, arg)) {};
+        Thread( int  (* callback)(void *), void *arg ) : _thread(new vex::thread(callback, arg)) {};
 
         /**
          * @brief Creates a thread object.
          * @param callback A reference to a function.
          * @param arg A void pointer that is passed to the callback.
          */
-        Thread( void (* callback)(void *), void *arg ) : _thread(new thread((int (*)(void *)) callback, arg)) {}
+        Thread( void (* callback)(void *), void *arg ) : _thread(new vex::thread((int (*)(void *)) callback, arg)) {}
 
         /**
          * @brief Construct a new Thread object
@@ -33,16 +42,18 @@ namespace adt {
         }
 
         /**
-         * @brief Destroy the Thread object
+         * @brief Destroy the Thread object 
          * 
          */
         ~Thread(){
+            _thread = nullptr;
             delete _thread;
+            //hi
         }
         
 
         private:
-        vex::thread* _thread;
+        vex::thread* _thread = nullptr;
 
         static int lambda_trampoline(void* arg) {
             auto* fn = static_cast<std::function<void()>*>(arg);
@@ -132,3 +143,7 @@ namespace adt {
             }
     };
 };
+
+#ifndef __cplusplus
+}
+#endif
