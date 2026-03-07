@@ -6,6 +6,7 @@
 #define ADT_ERR (INT32_MAX)
 #define ADT_SUCCESS (1)
 
+#include "include/v5lvgl.h"
 #include "chassis.hpp"
 #include "drivetrain.hpp"
 #include "advanced_controller.hpp"

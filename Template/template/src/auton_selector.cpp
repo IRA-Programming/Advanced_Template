@@ -85,7 +85,7 @@ lv_obj_t * myButton;
 lv_obj_t * myButtonLabel;
 lv_obj_t * myLabel;
 
-static void btn_click_action(lv_obj_t * btn, lv_event_t event)
+void btn_click_action(lv_obj_t * btn, lv_event_t event)
 {
     uint8_t id = (int)lv_obj_get_user_data(btn); //id usefull when there are multiple buttons
 

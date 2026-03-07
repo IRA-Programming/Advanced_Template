@@ -22,7 +22,6 @@
         } while (!(condition) && (WAIT_UNTIL_TIMEOUT_IRERATIOR_COUNT_____ < timeoutMs)); \
     }
 
-
 //Toolkit Class
 namespace adt {
     /**
@@ -70,6 +69,13 @@ namespace adt {
                 }
             }
 
+            /**
+             * @brief Allows the user to run code once if a button is pressed. Switches between 2 callbacks.
+             * 
+             * @param button The button to check if it is pressed
+             * @param callback1 The function to run when button is pressed an odd number of times [1, inf).
+             * @param callback2 The function to run when button is pressed an even number of times [2, inf).
+             */
             static void toggleButtonScheme(vex::controller::button &button, std::function<void()> callback1, std::function<void()> callback2){
                 toggleButtonScheme(button, [&](){
                     static bool status = false;
@@ -98,6 +104,27 @@ namespace adt {
                 if(!button.pressing() && buttonPressed){
                     buttonPressed = false;
                 }
+            }
+
+            static void race(std::function<void()> callback1, std::function<void()> callback2){
+                std::atomic<bool> complete;
+                complete.store(false);
+                std::function<void()> c1 = [&](){
+                    callback1();
+                    complete.store(true);
+                };
+
+                std::function<void()> c2 = [&](){
+                    callback2();
+                    complete.store(true);
+                };
+
+                adt::Thread(c1);
+                adt::Thread(c2);
+
+                do{
+                    wait(5, msec);
+                }while(complete.load() == false);
             }
 
         private:

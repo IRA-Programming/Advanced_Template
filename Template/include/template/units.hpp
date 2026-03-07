@@ -59,10 +59,11 @@ namespace adt {
             
 
             /**
-             * @brief Double value, must be dimentionless
+             * @brief Double value
              * @return the value as double
+             * @warning Drops the units
              */
-            operator double() const requires std::is_same_v<Self, Dimensionless>{
+            operator double() const {
                 return value;
             }
 
@@ -78,8 +79,6 @@ namespace adt {
             Self operator -( const Self& other ) const {
                 return Self(value - other.value);
             }
-
-            
 
     };
 }
