@@ -111,7 +111,6 @@ int demo() {
    lv_obj_add_style(myButton, LV_OBJ_PART_MAIN, &style1);
    lv_obj_set_size(myButton, 200, 50); //set the button size
    lv_obj_align(myButton, NULL, LV_ALIGN_IN_TOP_LEFT, 10, 10); //set the position to top mid
-
     myButtonLabel = lv_label_create(myButton, NULL); //create label and puts it inside of the button
     lv_label_set_text(myButtonLabel, "Click the Button"); //sets label text
 

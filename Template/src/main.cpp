@@ -33,6 +33,22 @@ void pre_auton(void) {
 }
 
 /*---------------------------------------------------------------------------*/
+/*                          Pre-Autonomous Functions                         */
+/*                                                                           */
+/*  You may want to perform some actions but only when plugged in to the     */
+/*  field control or a competion switch before the competition starts.       */
+/*  Do them in the following function.  You must return from this function   */
+/*  or the autonomous and usercontrol tasks will not be started.  This       */
+/*  function is only called once when plugged into a competition controller  */
+/*  not every time that the robot is connected.                              */
+/*---------------------------------------------------------------------------*/
+
+void competition_initialize(void) {
+  // All activities that occur before the competition starts
+  // Example: clearing encoders, setting servo positions, ...
+}
+
+/*---------------------------------------------------------------------------*/
 /*                              Disabled Functions                           */
 /*                                                                           */
 /*  This is not apart of the regular V5 Competition template. Here, you can  */
@@ -72,7 +88,7 @@ void autonomous(void) {
 /*                                                                           */
 /*  You must modify the code to add your own robot specific commands here.   */
 /*---------------------------------------------------------------------------*/
-controller Controller;
+
 
 void BrainSelector(){
     // 1. Create an image object on the active screen
@@ -93,21 +109,47 @@ void BrainSelector(){
     lv_obj_align(titleText, NULL, LV_ALIGN_IN_LEFT_MID, 10 , 0);
 }
 
+bool isCollide(){
+  if(distanceSensor.objectDistance(vex::distanceUnits::in) < 3 && bumperSensor.pressing()){
+    return true;
+  }else{
+    return false;
+  }
+}
 
 void usercontrol(void) {
-
-  BrainSelector();
-
-  // User control code here, inside the loop
+  Brain.Screen.clearScreen(0);
+  bool state = false;
+  bool hasDeadzone = true;
   while (1) {
-    // This is the main execution loop for the user control program.
-    // Each time through the loop your program should update motor + servo
-    // values based on feedback from the joysticks.
+    double leftY = Controller.Axis3.position(percentUnits::pct);
+    double rightX = Controller.Axis1.position(percentUnits::pct);
+    double rightY = Controller.Axis2.position(percentUnits::pct);
 
-    // ........................................................................
-    // Insert user code here. This is where you use the joystick values to
-    // update your motors, etc.
-    // ........................................................................
+    if(Controller.ButtonA.PRESSED){
+      state = !state;
+    }
+
+    if(Controller.ButtonB.PRESSED){
+      hasDeadzone = !hasDeadzone;
+    }
+
+    if(state){
+      //Tank Code
+    }else{
+      if(hasDeadzone){
+        //Arcade Code with Deadzone
+      }else{
+        //Arcade Code without Deadzone
+      }
+    }
+
+    if(Controller.ButtonY.pressing()){
+      Brain.Screen.clearScreen(120);
+    }else{
+      Brain.Screen.clearScreen(0);
+    }
+
 
     wait(20, msec); // Sleep the task for a short amount of time to
                     // prevent wasted resources.
@@ -118,10 +160,10 @@ void usercontrol(void) {
 // Main will set up the competition functions and callbacks.
 //
 
-void hi(){}
 int main() {
   //DO NOT REMOVE - ESPECIALY IF YOU ARE USING LVGL
   v5_lv_init(); //Initialize lvgl, this is required to use the display and touch screen. Thanks to jpearman for the help with this!
+
   // Set up callbacks for autonomous and driver control periods.
   Competition.autonomous(autonomous);
   Competition.drivercontrol(usercontrol);
@@ -129,10 +171,16 @@ int main() {
   // Run the pre-autonomous function.
   pre_auton();
 
+  // For additional competition-related functions
+
   // Prevent main from exiting with an infinite loop.
-  while (true) {
-    //Implementation of the disabled task
-    if(Competition.DISABLED) disabled();
-    wait(100, msec);
+
+  bool condition = false;
+
+  if(condition){
+    //Code if Condition is True
+  }else{
+    //Code if Condition is False
   }
+
 }

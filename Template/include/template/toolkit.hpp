@@ -22,6 +22,19 @@
         } while (!(condition) && (WAIT_UNTIL_TIMEOUT_IRERATIOR_COUNT_____ < timeoutMs)); \
     }
 
+
+#define COMPETITION_ADDITIONALS \
+while (true) { \
+    static bool competitionInitRan = false; \
+    if(Competition.DISABLED) disabled(); \
+    bool isCompetitionControlled = Competition.isCompetitionSwitch() || Competition.isFieldControl(); \
+    if(!competitionInitRan && isCompetitionControlled){ \
+      competition_initialize(); \
+      competitionInitRan = true; \
+    } \
+    wait(100, msec); \
+  } \
+
 //Toolkit Class
 namespace adt {
     /**
@@ -47,13 +60,13 @@ namespace adt {
              * @param toRun Code to run that may cause an exception.
              * @param onError Optional Parameter that allows you to run code if an exception occurs. Defaults to an empty function.
              */
-            static void errorHandler(std::function<void()> toRun, std::function<void()> onError = [](){}) {
-                try {
-                    toRun();
-                } catch (const std::exception& e) {
-                    onError();
-                }
-            }
+            // static void errorHandler(std::function<void()> toRun, std::function<void()> onError = [](){}) {
+            //     try {
+            //         toRun();
+            //     } catch (const std::exception& e) {
+            //         onError();
+            //     }
+            // }
 
             /**
              * @brief Allows you to run code and catch any exceptions that may occur so that it won't crash your program.
@@ -61,13 +74,13 @@ namespace adt {
              * @param toRun Code to run that may cause an exception.
              * @param onError Code to run if an exception occurs. Must take in an exception as a parameter.
              */
-            static void errorHandler(std::function<void()> toRun, std::function<void(std::exception e)> onError) {
-                try {
-                    toRun();
-                } catch (const std::exception& e) {
-                    onError(e);
-                }
-            }
+            // static void errorHandler(std::function<void()> toRun, std::function<void(std::exception e)> onError) {
+            //     try {
+            //         toRun();
+            //     } catch (const std::exception& e) {
+            //         onError(e);
+            //     }
+            // }
 
             /**
              * @brief Allows the user to run code once if a button is pressed. Switches between 2 callbacks.
@@ -106,7 +119,7 @@ namespace adt {
                 }
             }
 
-            static void race(std::function<void()> callback1, std::function<void()> callback2){
+            static void race(std::function<void()> callback1, std::function<void()> callback2, bool forceStop = false){
                 std::atomic<bool> complete;
                 complete.store(false);
                 std::function<void()> c1 = [&](){
@@ -119,14 +132,14 @@ namespace adt {
                     complete.store(true);
                 };
 
-                adt::Thread(c1);
-                adt::Thread(c2);
+                adt::Thread thread1(c1);
+
+                adt::Thread thread2(c2);
 
                 do{
-                    wait(5, msec);
+                    wait(5, vex::msec);
                 }while(complete.load() == false);
-            }
 
-        private:
+            }
     };
 };

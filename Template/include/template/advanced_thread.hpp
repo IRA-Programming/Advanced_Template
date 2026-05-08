@@ -50,6 +50,10 @@ namespace adt {
             delete _thread;
             //hi
         }
+
+        vex::thread vexthread() {
+            return *_thread;
+        }
         
 
         private:
@@ -93,7 +97,7 @@ namespace adt {
 
             class ThreadGuard{
                 public:
-                    explicit ThreadGuard(std::atomic<bool>& running, vex::mutex* mtx = nullptr): _running(running), _mtx(mtx) {
+                    explicit ThreadGuard(std::atomic<bool>& running, vex::mutex* mtx = nullptr): _mtx(mtx), _running(running) {
                         _running.store(true, std::memory_order_release);
                         if (_mtx) _mtx->lock();
                     }
