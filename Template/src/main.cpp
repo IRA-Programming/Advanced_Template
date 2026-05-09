@@ -33,7 +33,7 @@ void pre_auton(void) {
 }
 
 /*---------------------------------------------------------------------------*/
-/*                          Pre-Autonomous Functions                         */
+/*                      Competition Initialize Functions                     */
 /*                                                                           */
 /*  You may want to perform some actions but only when plugged in to the     */
 /*  field control or a competion switch before the competition starts.       */
@@ -109,47 +109,14 @@ void BrainSelector(){
     lv_obj_align(titleText, NULL, LV_ALIGN_IN_LEFT_MID, 10 , 0);
 }
 
-bool isCollide(){
-  if(distanceSensor.objectDistance(vex::distanceUnits::in) < 3 && bumperSensor.pressing()){
-    return true;
-  }else{
-    return false;
-  }
-}
 
 void usercontrol(void) {
-  Brain.Screen.clearScreen(0);
-  bool state = false;
-  bool hasDeadzone = true;
+  
   while (1) {
-    double leftY = Controller.Axis3.position(percentUnits::pct);
-    double rightX = Controller.Axis1.position(percentUnits::pct);
-    double rightY = Controller.Axis2.position(percentUnits::pct);
 
-    if(Controller.ButtonA.PRESSED){
-      state = !state;
-    }
-
-    if(Controller.ButtonB.PRESSED){
-      hasDeadzone = !hasDeadzone;
-    }
-
-    if(state){
-      //Tank Code
-    }else{
-      if(hasDeadzone){
-        //Arcade Code with Deadzone
-      }else{
-        //Arcade Code without Deadzone
-      }
-    }
-
-    if(Controller.ButtonY.pressing()){
-      Brain.Screen.clearScreen(120);
-    }else{
-      Brain.Screen.clearScreen(0);
-    }
-
+    // ..........................................................................
+    // Insert code to be run when the robot is in usercontrol
+    // ..........................................................................
 
     wait(20, msec); // Sleep the task for a short amount of time to
                     // prevent wasted resources.
@@ -162,7 +129,7 @@ void usercontrol(void) {
 
 int main() {
   //DO NOT REMOVE - ESPECIALY IF YOU ARE USING LVGL
-  v5_lv_init(); //Initialize lvgl, this is required to use the display and touch screen. Thanks to jpearman for the help with this!
+  v5_lv_init(); //Initialize lvgl, this is required to use the display and touch screen.
 
   // Set up callbacks for autonomous and driver control periods.
   Competition.autonomous(autonomous);
@@ -172,15 +139,5 @@ int main() {
   pre_auton();
 
   // For additional competition-related functions
-
-  // Prevent main from exiting with an infinite loop.
-
-  bool condition = false;
-
-  if(condition){
-    //Code if Condition is True
-  }else{
-    //Code if Condition is False
-  }
-
+  COMPETITION_ADDITIONALS
 }

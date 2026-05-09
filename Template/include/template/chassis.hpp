@@ -2,6 +2,7 @@
 #include "template_api.hpp"
 #include <string>
 #include <atomic>
+#include <functional>
 
 // Define pi if not defined
 #ifndef M_PI
@@ -39,7 +40,20 @@ namespace adt {
         double y;
         double heading; // in degrees
 
-        Pose(double x = 0.0, double y = 0.0, double heading = 0.0) : x(x), y(y), heading(heading) {}
+        double radians() const {
+            return heading * (M_PI / 180.0);
+        }
+
+        Pose(double x = 0.0, double y = 0.0, double heading = 0.0, bool radians = false) : x(x), y(y){
+            if(radians){
+                this->heading = heading * (180.0 / M_PI);
+            }else{
+                this->heading = heading;
+            }
+        }
+
+        Pose(const Pose& other) : x(other.x), y(other.y), heading(other.heading) {}
+        
 
         Pose operator+ (const Pose &other) const {
             return Pose(x + other.x, y + other.y, heading + other.heading);
@@ -81,7 +95,7 @@ namespace adt {
 
     class sensors {
         public:
-            sensors(trackingWheel* vertical, trackingWheel* horizontal, vex::inertial* inertialSensor) : _vertical(vertical), _horizontal(horizontal), _inertialSensor(inertialSensor) {};
+            sensors(trackingWheel* vertical, trackingWheel* horizontal, vex::inertial* inertialSensor, double verticalOffset, double horizontalOffset) : _vertical(vertical), _horizontal(horizontal), _inertialSensor(inertialSensor), vTrackingOffset(verticalOffset), hTrackingOffset(horizontalOffset) {};
 
             enum class odom{
                 vertical,
@@ -150,6 +164,13 @@ namespace adt {
             trackingWheel* _horizontal = nullptr;
             vex::inertial* _inertialSensor = nullptr;
 
+            double previousVerticalPosition = 0.0;
+            double previousHorizontalPosition = 0.0;
+            double previousHeading = 0.0;
+
+            double vTrackingOffset = 0.0;
+            double hTrackingOffset = 0.0;
+
             Pose previousPose;
             Pose currentPose;
 
@@ -160,7 +181,22 @@ namespace adt {
         public:
             chassis();
         private:
+            struct _driveOutputs
+            {
+                double kLeftSpeed = NULL;
+                double kRightSpeed = NULL;
 
+                std::function<void()> fLeftSpeed = nullptr;
+                std::function<void()> fRightSpeed = nullptr;
+            };
+            
+            /**
+             * @brief The movement logic for the chassis, used to calculate the necessary outputs to move the chassis to a target pose. Uses the current pose of the chassis and a target pose to calculate the necessary outputs to move the chassis to the target pose.
+             * 
+             * @param targetPose Target Pose (in local coordinates) for the chassis to move to
+             * @return _driveOutputs 
+             */
+            _driveOutputs movementLogic(Pose targetPose);
     };
     
 }; // namespace adt

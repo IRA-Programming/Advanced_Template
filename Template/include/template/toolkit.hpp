@@ -119,7 +119,7 @@ namespace adt {
                 }
             }
 
-            static void race(std::function<void()> callback1, std::function<void()> callback2, bool forceStop = false){
+            static void waitUntilOneComplete(std::function<void()> callback1, std::function<void()> callback2, bool forceStop = false){
                 std::atomic<bool> complete;
                 complete.store(false);
                 std::function<void()> c1 = [&](){
